@@ -1,0 +1,32 @@
+{
+  "query": "Human Heart",
+  "category": "biological organ",
+  "type": "biological",
+  "components": [
+    "left ventricle",
+    "right ventricle",
+    "left atrium",
+    "right atrium",
+    "aorta",
+    "pulmonary artery",
+    "mitral valve",
+    "tricuspid valve"
+  ],
+  "related_terms": [
+    "human heart",
+    "cardiac muscle",
+    "heart anatomy",
+    "cardiovascular",
+    "3d model"
+  ],
+  "spatial_description": "A fist-sized muscular organ with four chambers, major vessels at the top, and a rounded base, asymmetric with the apex pointing left.",
+  "search_keywords": [
+    "human heart",
+    "heart anatomy",
+    "cardiac",
+    "biological",
+    "3d model",
+    "medical"
+  ],
+  "fallback_triggered": false
+}
