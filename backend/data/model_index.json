@@ -1,0 +1,59 @@
+{
+  "models": [
+    {
+  "id": "local_heart_001",
+  "title": "Human Heart Anatomical Model",
+  "category": "biological",
+  "tags": ["heart", "anatomy", "cardiac", "organ", "biology"],
+  "components": ["atrium", "ventricle", "valve", "aorta", "pulmonary"],
+  "description": "Detailed anatomical model with labeled chambers including atrium ventricle valve aorta pulmonary cardiovascular cardiac",
+  "file": "assets/anatomy/human_heart.glb",
+  "viewer_url": null,
+  "source": "local"
+},
+    {
+      "id": "local_taj_001",
+      "title": "Taj Mahal",
+      "category": "monument",
+      "tags": ["taj mahal", "india", "monument", "mausoleum"],
+      "components": ["dome", "minarets", "arch", "base", "garden"],
+      "description": "Taj Mahal with main dome and four minarets.",
+      "file": "assets/monuments/taj_mahal.glb",
+      "viewer_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_dna_001",
+      "title": "DNA Double Helix",
+      "category": "biological",
+      "tags": ["dna", "double helix", "genetics", "molecule", "biology"],
+      "components": ["helix", "nucleotide", "base pair", "strand", "backbone"],
+      "description": "DNA double helix structure showing base pairs.",
+      "file": "assets/scientific/dna.glb",
+      "viewer_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_solar_001",
+      "title": "Solar System",
+      "category": "scientific",
+      "tags": ["solar system", "planets", "orbit", "astronomy", "space"],
+      "components": ["sun", "planets", "orbit", "moon", "asteroid belt"],
+      "description": "Solar system with all 8 planets and orbits.",
+      "file": "assets/scientific/solar_system.glb",
+      "viewer_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_bst_001",
+      "title": "Binary Search Tree",
+      "category": "algorithmic",
+      "tags": ["binary tree", "BST", "data structure", "nodes", "algorithm"],
+      "components": ["root", "node", "left child", "right child", "leaf"],
+      "description": "Binary search tree with nodes and edges.",
+      "file": "assets/primitives/bst.glb",
+      "viewer_url": null,
+      "source": "local"
+    }
+  ]
+}
