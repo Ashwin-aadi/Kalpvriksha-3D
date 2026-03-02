@@ -1,0 +1,23 @@
+{
+  "concept": {
+    "query": "Human Heart",
+    "category": "biological organ",
+    "type": "biological",
+    "components": ["atrium", "ventricle", "valve", "aorta"],
+    "related_terms": ["cardiovascular", "cardiac"],
+    "spatial_description": "Fist-sized muscular pump with 4 chambers",
+    "search_keywords": ["heart", "anatomy", "cardiac"]
+  },
+  "models": [{
+    "id": "local_heart_001",
+    "title": "Human Heart Anatomical Model",
+    "confidence": 87.3,
+    "matched_parts": ["atrium", "ventricle", "valve"],
+    "missing_parts": ["aorta"],
+    "source": "local",
+    "viewer_url": null,
+    "thumbnail_url": null
+  }],
+  "fallback_triggered": false,
+  "best_confidence": 87.3
+}
