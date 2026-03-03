@@ -6,7 +6,8 @@ from groq import Groq
 from app.models.schemas import ConceptResponse
 
 # OpenAI client
-openai_client = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+def _get_openai_client():
+    return AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 ALLOWED_TYPES = {'physical', 'biological', 'algorithmic', 'abstract', 'ambiguous'}
 
@@ -44,7 +45,7 @@ async def extract_concept(query: str) -> ConceptResponse:
     # Try OpenAI first
     if os.getenv('OPENAI_API_KEY'):
         try:
-            response = await openai_client.chat.completions.create(
+            response = await _get_openai_client().chat.completions.create(
                 model='gpt-4o-mini',
                 response_format={'type': 'json_object'},
                 messages=[
