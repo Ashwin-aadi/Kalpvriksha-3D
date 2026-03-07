@@ -6,6 +6,7 @@ const COORD_SYSTEMS = [
   { id: 'spherical',   label: 'Spherical',   hint: 'rho = 2 * sin(phi)' },
   { id: 'parametric',  label: 'Parametric',  hint: 'x=cos(t), y=sin(t), z=t' },
   { id: 'vector',      label: 'Vector Field', hint: 'F = [-y, x, 0]' },
+  { id: 'implicit', label: 'Implicit', hint: 'x**2 + y**2 + z**2 - 1' },
 ];
 
 const EXAMPLES = [
@@ -16,6 +17,9 @@ const EXAMPLES = [
   { label: 'Cone',         eq: 'z = r',                    coord: 'cylindrical' },
   { label: 'Helix',        eq: 'x=cos(t), y=sin(t), z=t/3', coord: 'parametric' },
   { label: 'Vortex field', eq: 'F = [-y, x, 0]',          coord: 'vector' },
+  { label: 'Sphere',       eq: 'x**2 + y**2 + z**2 - 1',      coord: 'implicit' },
+  { label: 'Hyperboloid',  eq: 'x**2 + y**2 - z**2 - 1',      coord: 'implicit' },
+  { label: 'Torus',        eq: '(sqrt(x**2+y**2)-2)**2+z**2-1', coord: 'implicit' },
 ];
 
 export function EquationPanel({ onPlot, onAnalyze, loading, analysisResult }) {

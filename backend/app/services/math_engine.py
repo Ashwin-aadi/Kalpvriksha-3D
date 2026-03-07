@@ -33,7 +33,6 @@ def safe_eval(expr: str, variables: dict) -> float:
 
 def plot_cartesian(equation: str, x_range: list, y_range: list, resolution: int) -> dict:
     """Plot z = f(x, y) surface."""
-    # Parse equation: "z = x**2 + y**2" → extract RHS
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
@@ -41,27 +40,40 @@ def plot_cartesian(equation: str, x_range: list, y_range: list, resolution: int)
     xs = np.linspace(x_range[0], x_range[1], resolution)
     ys = np.linspace(y_range[0], y_range[1], resolution)
 
-    points = []
+    # Build full grid (None for invalid points)
+    grid = []
     for x in xs:
+        row = []
         for y in ys:
             z = safe_eval(eq, {'x': float(x), 'y': float(y)})
-            if z is not None:
-                points.append([float(x), float(z), float(y)])  # THREE.js: y is up
+            row.append(z)
+        grid.append(row)
 
-    # Build triangle indices
-    triangles = []
+    # Flatten grid into points, track index map
+    points = []
+    index_map = {}  # (i,j) -> index in points list
     R = resolution
+    for i in range(R):
+        for j in range(R):
+            z = grid[i][j]
+            if z is not None:
+                index_map[(i, j)] = len(points)
+                points.append([float(xs[i]), float(z), float(ys[j])])
+
+    # Only add triangles where all 4 corners exist
+    triangles = []
     for i in range(R - 1):
         for j in range(R - 1):
-            a = i * R + j
-            b = i * R + j + 1
-            c = (i + 1) * R + j
-            d = (i + 1) * R + j + 1
-            triangles.append([a, b, c])
-            triangles.append([b, d, c])
+            a = index_map.get((i,   j))
+            b = index_map.get((i,   j+1))
+            c = index_map.get((i+1, j))
+            d = index_map.get((i+1, j+1))
+            if a is not None and b is not None and c is not None:
+                triangles.append([a, b, c])
+            if b is not None and d is not None and c is not None:
+                triangles.append([b, d, c])
 
     return {'plot_type': 'surface', 'points': points, 'triangles': triangles}
-
 
 def plot_cylindrical(equation: str, resolution: int) -> dict:
     """Plot z = f(r, theta) in cylindrical coordinates."""
@@ -72,25 +84,41 @@ def plot_cylindrical(equation: str, resolution: int) -> dict:
     r_vals = np.linspace(0, 5, resolution)
     theta_vals = np.linspace(0, 2 * math.pi, resolution)
 
-    points = []
+    # Build full grid
+    grid = []
     for r in r_vals:
+        row = []
         for theta in theta_vals:
             z = safe_eval(eq, {'r': float(r), 'theta': float(theta)})
+            row.append(z)
+        grid.append(row)
+
+    # Flatten into points with index map
+    points = []
+    index_map = {}
+    R = resolution
+    for i in range(R):
+        for j in range(R):
+            z = grid[i][j]
             if z is not None:
+                r = float(r_vals[i])
+                theta = float(theta_vals[j])
                 x = r * math.cos(theta)
                 y = r * math.sin(theta)
+                index_map[(i, j)] = len(points)
                 points.append([x, float(z), y])
 
     triangles = []
-    R = resolution
     for i in range(R - 1):
         for j in range(R - 1):
-            a = i * R + j
-            b = i * R + j + 1
-            c = (i + 1) * R + j
-            d = (i + 1) * R + j + 1
-            triangles.append([a, b, c])
-            triangles.append([b, d, c])
+            a = index_map.get((i,   j))
+            b = index_map.get((i,   j+1))
+            c = index_map.get((i+1, j))
+            d = index_map.get((i+1, j+1))
+            if a is not None and b is not None and c is not None:
+                triangles.append([a, b, c])
+            if b is not None and d is not None and c is not None:
+                triangles.append([b, d, c])
 
     return {'plot_type': 'surface', 'points': points, 'triangles': triangles}
 
@@ -104,29 +132,44 @@ def plot_spherical(equation: str, resolution: int) -> dict:
     phi_vals = np.linspace(0, math.pi, resolution)
     theta_vals = np.linspace(0, 2 * math.pi, resolution)
 
-    points = []
+    # Build full grid
+    grid = []
     for phi in phi_vals:
+        row = []
         for theta in theta_vals:
             rho = safe_eval(eq, {'phi': float(phi), 'theta': float(theta), 'rho': 1.0})
-            if rho is not None and rho >= 0:
+            row.append(rho if (rho is not None and rho >= 0) else None)
+        grid.append(row)
+
+    # Flatten into points with index map
+    points = []
+    index_map = {}
+    R = resolution
+    for i in range(R):
+        for j in range(R):
+            rho = grid[i][j]
+            if rho is not None:
+                phi = float(phi_vals[i])
+                theta = float(theta_vals[j])
                 x = rho * math.sin(phi) * math.cos(theta)
                 y = rho * math.cos(phi)
                 z = rho * math.sin(phi) * math.sin(theta)
+                index_map[(i, j)] = len(points)
                 points.append([x, y, z])
 
     triangles = []
-    R = resolution
     for i in range(R - 1):
         for j in range(R - 1):
-            a = i * R + j
-            b = i * R + j + 1
-            c = (i + 1) * R + j
-            d = (i + 1) * R + j + 1
-            triangles.append([a, b, c])
-            triangles.append([b, d, c])
+            a = index_map.get((i,   j))
+            b = index_map.get((i,   j+1))
+            c = index_map.get((i+1, j))
+            d = index_map.get((i+1, j+1))
+            if a is not None and b is not None and c is not None:
+                triangles.append([a, b, c])
+            if b is not None and d is not None and c is not None:
+                triangles.append([b, d, c])
 
     return {'plot_type': 'surface', 'points': points, 'triangles': triangles}
-
 
 def plot_parametric(equation: str, resolution: int) -> dict:
     """Plot parametric curve: x=f(t), y=g(t), z=h(t)"""
@@ -182,6 +225,99 @@ def plot_vector_field(equation: str, x_range: list, y_range: list, resolution: i
 
     return {'plot_type': 'vector_field', 'points': points}
 
+def plot_implicit(equation: str, x_range: list, y_range: list, resolution: int) -> dict:
+    """
+    Plot implicit surface f(x,y,z) = 0 using marching cubes algorithm.
+    Equation examples:
+      x**2 + y**2 + z**2 - 1        (sphere)
+      x**2 + y**2 - z**2 - 1        (hyperboloid)
+      x**2 + y**2 + z**2 - x*y*z    (custom)
+    """
+    eq = equation.strip()
+    if '=' in eq:
+        lhs, rhs = eq.split('=', 1)
+        eq = f"({lhs.strip()}) - ({rhs.strip()})"  # convert to f(x,y,z) = 0 form
+
+    z_range = x_range  # use same range for z
+    res = max(10, min(50, resolution))  # cap at 50 for performance
+
+    xs = np.linspace(x_range[0], x_range[1], res)
+    ys = np.linspace(y_range[0], y_range[1], res)
+    zs = np.linspace(z_range[0], z_range[1], res)
+
+    # Evaluate f(x,y,z) at every grid point
+    grid = np.zeros((res, res, res))
+    for i, x in enumerate(xs):
+        for j, y in enumerate(ys):
+            for k, z in enumerate(zs):
+                val = safe_eval(eq, {'x': float(x), 'y': float(y), 'z': float(z)})
+                grid[i, j, k] = val if val is not None else float('nan')
+
+    # Marching cubes — find triangles where f changes sign
+    points = []
+    triangles = []
+
+    def interp_vertex(p1, p2, v1, v2):
+        """Interpolate vertex position where f=0 between p1 and p2."""
+        if abs(v2 - v1) < 1e-10:
+            return [(p1[0]+p2[0])/2, (p1[1]+p2[1])/2, (p1[2]+p2[2])/2]
+        t = -v1 / (v2 - v1)
+        return [p1[0] + t*(p2[0]-p1[0]),
+                p1[1] + t*(p2[1]-p1[1]),
+                p1[2] + t*(p2[2]-p1[2])]
+
+    def add_triangle(pa, pb, pc):
+        base = len(points)
+        # THREE.js coord system: y is up, so swap y and z
+        points.append([pa[0], pa[2], pa[1]])
+        points.append([pb[0], pb[2], pb[1]])
+        points.append([pc[0], pc[2], pc[1]])
+        triangles.append([base, base+1, base+2])
+
+    for i in range(res - 1):
+        for j in range(res - 1):
+            for k in range(res - 1):
+                # 8 corners of the cube
+                corners = [
+                    (i,   j,   k),
+                    (i+1, j,   k),
+                    (i+1, j+1, k),
+                    (i,   j+1, k),
+                    (i,   j,   k+1),
+                    (i+1, j,   k+1),
+                    (i+1, j+1, k+1),
+                    (i,   j+1, k+1),
+                ]
+                vals = [grid[c] for c in corners]
+                pos  = [(float(xs[c[0]]), float(ys[c[1]]), float(zs[c[2]])) for c in corners]
+
+                # Skip cubes with NaN
+                if any(np.isnan(v) for v in vals):
+                    continue
+
+                # Find edges where sign changes
+                edges = [
+                    (0,1),(1,2),(2,3),(3,0),
+                    (4,5),(5,6),(6,7),(7,4),
+                    (0,4),(1,5),(2,6),(3,7),
+                ]
+                verts = {}
+                for e, (a, b) in enumerate(edges):
+                    if (vals[a] >= 0) != (vals[b] >= 0):
+                        verts[e] = interp_vertex(pos[a], pos[b], vals[a], vals[b])
+
+                if len(verts) < 3:
+                    continue
+
+                # Triangulate the intersection polygon
+                vert_list = list(verts.values())
+                for idx in range(1, len(vert_list) - 1):
+                    add_triangle(vert_list[0], vert_list[idx], vert_list[idx+1])
+
+    if not points:
+        return {'error': 'No surface found. Check your equation or range.'}
+
+    return {'plot_type': 'surface', 'points': points, 'triangles': triangles}
 
 def compute_plot(equation: str, coord_system: str, resolution: int,
                  x_range: list, y_range: list) -> dict:
@@ -198,6 +334,8 @@ def compute_plot(equation: str, coord_system: str, resolution: int,
             return plot_parametric(equation, res)
         elif coord_system == 'vector':
             return plot_vector_field(equation, x_range, y_range, res)
+        elif coord_system == 'implicit':
+            return plot_implicit(equation, x_range, y_range, res)
         else:
             return {'error': f'Unknown coordinate system: {coord_system}'}
     except Exception as e:
