@@ -79,24 +79,33 @@ export function GraphCanvas({ plotData, loading }) {
     window.addEventListener('keydown',  onKeyDown);
     window.addEventListener('keyup',    onKeyUp);
 
-    // Key loop — reads theta EVERY frame so direction always matches current camera facing
+    // Key loop — derives forward/right from actual camera vectors so ANY angle works correctly
     const keyLoop = () => {
       const k = keysHeld.current;
       if (Object.keys(k).length === 0) { keyLoopRef.current = requestAnimationFrame(keyLoop); return; }
 
-      const { theta, radius } = spherical.current;
+      const { theta, phi, radius } = spherical.current;
       const spd = radius * 0.025;
       const t = target.current;
+      const cam = cameraRef.current;
 
-      const fwdX = -Math.sin(theta);
-      const fwdZ = -Math.cos(theta);
-      const rgtX =  Math.cos(theta);
-      const rgtZ = -Math.sin(theta);
+      // True forward = vector from camera TO target, projected onto XZ plane, then normalized
+      // This is always correct regardless of phi or theta
+      const camPos = cam.position;
+      const fwd = new THREE.Vector3(
+        t.x - camPos.x,
+        0,              // flatten to horizontal plane for WASD pan
+        t.z - camPos.z
+      ).normalize();
 
-      if (k['w'] || k['arrowup'])    { t.x += fwdX*spd; t.z += fwdZ*spd; }
-      if (k['s'] || k['arrowdown'])  { t.x -= fwdX*spd; t.z -= fwdZ*spd; }
-      if (k['a'] || k['arrowleft'])  { t.x -= rgtX*spd; t.z -= rgtZ*spd; }
-      if (k['d'] || k['arrowright']) { t.x += rgtX*spd; t.z += rgtZ*spd; }
+      // Right = cross product of world-up and forward
+      const up  = new THREE.Vector3(0, 1, 0);
+      const rgt = new THREE.Vector3().crossVectors(fwd, up).normalize();
+
+      if (k['w'] || k['arrowup'])    { t.x += fwd.x*spd; t.z += fwd.z*spd; }
+      if (k['s'] || k['arrowdown'])  { t.x -= fwd.x*spd; t.z -= fwd.z*spd; }
+      if (k['a'] || k['arrowleft'])  { t.x += rgt.x*spd; t.z += rgt.z*spd; }
+      if (k['d'] || k['arrowright']) { t.x -= rgt.x*spd; t.z -= rgt.z*spd; }
       if (k['e']) { t.y += spd; }
       if (k['q']) { t.y -= spd; }
 
