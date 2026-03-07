@@ -1,10 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-
 load_dotenv()
 
-from app.routes import retrieve
+from app.routes import retrieve, concept, fallback, math_routes, physics_routes
 
 app = FastAPI(title='Kalpaviraksh-3D API', version='1.0.0')
 
@@ -17,6 +16,10 @@ app.add_middleware(
 )
 
 app.include_router(retrieve.router, prefix='/api')
+app.include_router(concept.router, prefix='/api')
+app.include_router(fallback.router, prefix='/api')
+app.include_router(math_routes.router, prefix='/api')
+app.include_router(physics_routes.router, prefix='/api')
 
 @app.get('/health')
 def health_check():
