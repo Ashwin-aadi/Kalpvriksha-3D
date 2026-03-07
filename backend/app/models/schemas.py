@@ -12,17 +12,18 @@ class ConceptResponse(BaseModel):
     related_terms: List[str]
     spatial_description: str
     search_keywords: List[str]
-    fallback_triggered: bool = False
 
 class ModelResult(BaseModel):
     id: str
     title: str
-    confidence: float
-    missing_parts: List[str]
-    matched_parts: List[str]
-    source: str
     viewer_url: Optional[str] = None
-    thumbnail_url: Optional[str] = None
+    embed_url: Optional[str] = None
+    thumbnail: Optional[str] = None
+    confidence: float = 0.0
+    source: str = "sketchfab"
+    matched_parts: List[str] = []
+    missing_parts: List[str] = []
+    is_sketchfab: bool = False
 
 class RetrieveRequest(BaseModel):
     concept: ConceptResponse
@@ -30,7 +31,7 @@ class RetrieveRequest(BaseModel):
 class RetrieveResponse(BaseModel):
     models: List[ModelResult]
     fallback_triggered: bool
-    best_confidence: float
+    best_confidence: float = 0.0
 
 class ProceduralShape(BaseModel):
     shape: str

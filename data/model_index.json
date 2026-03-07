@@ -1,0 +1,124 @@
+{
+  "models": [
+    {
+      "id": "local_heart_001",
+      "title": "Human Heart Anatomical Model",
+      "category": "biological",
+      "tags": ["heart", "anatomy", "cardiac", "organ", "biology", "human"],
+      "components": ["atrium", "ventricle", "valve", "aorta", "pulmonary"],
+      "description": "Detailed anatomical model of the human heart with labeled chambers, valves, and major vessels.",
+      "file": "assets/anatomy/human_heart.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_taj_001",
+      "title": "Taj Mahal",
+      "category": "monument",
+      "tags": ["taj mahal", "india", "monument", "mausoleum", "architecture"],
+      "components": ["dome", "minarets", "arch", "base", "garden"],
+      "description": "Iconic white marble mausoleum with main central dome and four corner minarets.",
+      "file": "assets/monuments/taj_mahal.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_dna_001",
+      "title": "DNA Double Helix",
+      "category": "biological",
+      "tags": ["dna", "double helix", "genetics", "molecule", "biology", "nucleotide"],
+      "components": ["double helix", "nucleotide", "base pair", "strand", "backbone"],
+      "description": "3D model of the DNA double helix showing base pairs and sugar-phosphate backbone.",
+      "file": "assets/scientific/dna_helix.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_solar_001",
+      "title": "Solar System",
+      "category": "astronomy",
+      "tags": ["solar system", "planets", "orbit", "astronomy", "space", "sun"],
+      "components": ["sun", "planets", "orbit", "asteroid belt", "moons"],
+      "description": "Complete solar system model showing all 8 planets orbiting the sun.",
+      "file": "assets/scientific/solar_system.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_eiffel_001",
+      "title": "Eiffel Tower",
+      "category": "monument",
+      "tags": ["eiffel tower", "paris", "france", "landmark", "iron tower"],
+      "components": ["base", "pillars", "lattice", "platform", "antenna"],
+      "description": "Iconic iron lattice tower in Paris, France.",
+      "file": "assets/monuments/eiffel_tower.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_cell_001",
+      "title": "Animal Cell",
+      "category": "biological",
+      "tags": ["cell", "biology", "organelle", "nucleus", "membrane"],
+      "components": ["nucleus", "mitochondria", "membrane", "cytoplasm", "ribosomes"],
+      "description": "3D model of an animal cell showing major organelles.",
+      "file": "assets/scientific/animal_cell.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_mito_001",
+      "title": "Mitochondria",
+      "category": "biological",
+      "tags": ["mitochondria", "cell", "organelle", "energy", "ATP", "biology"],
+      "components": ["outer membrane", "inner membrane", "cristae", "matrix", "ATP synthase"],
+      "description": "Detailed cross-section model of mitochondria showing cristae structure.",
+      "file": "assets/scientific/mitochondria.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_brain_001",
+      "title": "Human Brain",
+      "category": "biological",
+      "tags": ["brain", "neuroscience", "anatomy", "cortex", "cerebellum"],
+      "components": ["cerebrum", "cerebellum", "brainstem", "cortex", "hippocampus"],
+      "description": "Anatomical model of the human brain with labeled regions.",
+      "file": "assets/anatomy/human_brain.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_molecule_001",
+      "title": "Water Molecule H2O",
+      "category": "chemistry",
+      "tags": ["water", "molecule", "H2O", "chemistry", "oxygen", "hydrogen"],
+      "components": ["oxygen", "hydrogen", "bond", "electron"],
+      "description": "3D ball-and-stick model of the water molecule.",
+      "file": "assets/scientific/water_molecule.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    },
+    {
+      "id": "local_blackhole_001",
+      "title": "Black Hole",
+      "category": "astronomy",
+      "tags": ["black hole", "space", "gravity", "singularity", "event horizon"],
+      "components": ["singularity", "event horizon", "accretion disk", "jets"],
+      "description": "Visualization of a black hole with accretion disk and gravitational lensing.",
+      "file": "assets/scientific/black_hole.glb",
+      "viewer_url": null,
+      "thumbnail_url": null,
+      "source": "local"
+    }
+  ]
+}
