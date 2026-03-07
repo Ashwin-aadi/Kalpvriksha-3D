@@ -1,0 +1,15 @@
+{
+  "concept_map": {
+    "dna": ["dna", "double helix", "nucleotide", "genetics", "molecule"],
+    "solar system": ["solar system", "planets", "orbit", "astronomy"],
+    "eiffel tower": ["eiffel tower", "paris", "france", "landmark"],
+    "binary search tree": ["binary tree", "BST", "nodes", "data structure"],
+    "democracy": ["democracy", "governance", "voting", "citizens"],
+    "mitochondria": ["mitochondria", "cell", "organelle", "biology"],
+    "black hole": ["black hole", "space", "gravity", "singularity"],
+    "human heart": ["heart", "anatomy", "cardiac", "atrium", "ventricle"],
+    "human brain": ["brain", "neuroscience", "cerebrum", "cortex"],
+    "water molecule": ["water", "H2O", "molecule", "chemistry"],
+    "taj mahal": ["taj mahal", "india", "monument", "dome", "minarets"]
+  }
+}
