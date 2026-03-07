@@ -27,7 +27,8 @@ export function useModelLoader() {
       const hasGoodModel = (
         rRes.data.models.length > 0 &&
         !rRes.data.fallback_triggered &&
-        rRes.data.models[0]?.embed_url
+        rRes.data.models[0]?.embed_url &&
+        rRes.data.best_confidence >= 60
       );
 
       if (hasGoodModel) {

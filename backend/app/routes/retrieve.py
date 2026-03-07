@@ -6,7 +6,7 @@ from app.services.ranking_service import rank_models
 router = APIRouter()
 
 import os
-CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "40.0"))
+CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "60.0"))
 
 @router.post("/retrieve", response_model=RetrieveResponse)
 async def retrieve_models(request: RetrieveRequest):
