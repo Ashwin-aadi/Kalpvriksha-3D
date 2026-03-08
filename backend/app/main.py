@@ -20,15 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Core concept explorer
-app.include_router(concept.router,       prefix="/api")
-app.include_router(retrieve.router,      prefix="/api")
-app.include_router(fallback.router,      prefix="/api")
-
-# Math grapher
-app.include_router(math_routes.router,   prefix="/api")
-
-# Physics engine
+app.include_router(concept.router,        prefix="/api")
+app.include_router(retrieve.router,       prefix="/api")
+app.include_router(fallback.router,       prefix="/api")
+app.include_router(math_routes.router,    prefix="/api")
 app.include_router(physics_routes.router, prefix="/api")
 
 

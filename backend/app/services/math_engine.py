@@ -6,9 +6,7 @@ Analysis: slope/gradient, area, divergence, curl
 
 import math
 import numpy as np
-from typing import Optional
 
-# Safe math namespace for eval
 SAFE_MATH = {
     'sin': math.sin, 'cos': math.cos, 'tan': math.tan,
     'asin': math.asin, 'acos': math.acos, 'atan': math.atan, 'atan2': math.atan2,
@@ -19,8 +17,7 @@ SAFE_MATH = {
 }
 
 
-def safe_eval(expr: str, variables: dict) -> float:
-    """Safely evaluate a math expression."""
+def safe_eval(expr: str, variables: dict):
     namespace = {**SAFE_MATH, **variables}
     try:
         result = eval(expr, {"__builtins__": {}}, namespace)
@@ -32,8 +29,6 @@ def safe_eval(expr: str, variables: dict) -> float:
 
 
 def plot_cartesian(equation: str, x_range: list, y_range: list, resolution: int) -> dict:
-    """Plot z = f(x, y) surface."""
-    # Parse equation: "z = x**2 + y**2" → extract RHS
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
@@ -46,9 +41,8 @@ def plot_cartesian(equation: str, x_range: list, y_range: list, resolution: int)
         for y in ys:
             z = safe_eval(eq, {'x': float(x), 'y': float(y)})
             if z is not None:
-                points.append([float(x), float(z), float(y)])  # THREE.js: y is up
+                points.append([float(x), float(z), float(y)])
 
-    # Build triangle indices
     triangles = []
     R = resolution
     for i in range(R - 1):
@@ -64,12 +58,11 @@ def plot_cartesian(equation: str, x_range: list, y_range: list, resolution: int)
 
 
 def plot_cylindrical(equation: str, resolution: int) -> dict:
-    """Plot z = f(r, theta) in cylindrical coordinates."""
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
 
-    r_vals = np.linspace(0, 5, resolution)
+    r_vals     = np.linspace(0, 5, resolution)
     theta_vals = np.linspace(0, 2 * math.pi, resolution)
 
     points = []
@@ -85,10 +78,8 @@ def plot_cylindrical(equation: str, resolution: int) -> dict:
     R = resolution
     for i in range(R - 1):
         for j in range(R - 1):
-            a = i * R + j
-            b = i * R + j + 1
-            c = (i + 1) * R + j
-            d = (i + 1) * R + j + 1
+            a = i * R + j;     b = i * R + j + 1
+            c = (i+1)*R + j;   d = (i+1)*R + j + 1
             triangles.append([a, b, c])
             triangles.append([b, d, c])
 
@@ -96,12 +87,11 @@ def plot_cylindrical(equation: str, resolution: int) -> dict:
 
 
 def plot_spherical(equation: str, resolution: int) -> dict:
-    """Plot rho = f(phi, theta) in spherical coordinates."""
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
 
-    phi_vals = np.linspace(0, math.pi, resolution)
+    phi_vals   = np.linspace(0, math.pi, resolution)
     theta_vals = np.linspace(0, 2 * math.pi, resolution)
 
     points = []
@@ -118,10 +108,8 @@ def plot_spherical(equation: str, resolution: int) -> dict:
     R = resolution
     for i in range(R - 1):
         for j in range(R - 1):
-            a = i * R + j
-            b = i * R + j + 1
-            c = (i + 1) * R + j
-            d = (i + 1) * R + j + 1
+            a = i * R + j;     b = i * R + j + 1
+            c = (i+1)*R + j;   d = (i+1)*R + j + 1
             triangles.append([a, b, c])
             triangles.append([b, d, c])
 
@@ -129,8 +117,6 @@ def plot_spherical(equation: str, resolution: int) -> dict:
 
 
 def plot_parametric(equation: str, resolution: int) -> dict:
-    """Plot parametric curve: x=f(t), y=g(t), z=h(t)"""
-    # Parse: "x=cos(t), y=sin(t), z=t/3"
     parts = {}
     for part in equation.split(','):
         part = part.strip()
@@ -151,12 +137,9 @@ def plot_parametric(equation: str, resolution: int) -> dict:
 
 
 def plot_vector_field(equation: str, x_range: list, y_range: list, resolution: int) -> dict:
-    """Plot vector field F = [Fx, Fy, Fz]"""
-    # Parse "F = [-y, x, 0]"
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
-    # Remove brackets
     eq = eq.strip('[]')
     comps = [c.strip() for c in eq.split(',')]
 
@@ -175,7 +158,7 @@ def plot_vector_field(equation: str, x_range: list, y_range: list, resolution: i
                 mag = math.sqrt(fx**2 + fy**2 + fz**2)
                 if mag > 0:
                     points.append({
-                        'origin': [float(x), float(z_val), float(y)],
+                        'origin':    [float(x), float(z_val), float(y)],
                         'direction': [fx/mag, fz/mag, fy/mag],
                         'magnitude': mag,
                     })
@@ -185,7 +168,6 @@ def plot_vector_field(equation: str, x_range: list, y_range: list, resolution: i
 
 def compute_plot(equation: str, coord_system: str, resolution: int,
                  x_range: list, y_range: list) -> dict:
-    """Main entry point for plotting."""
     res = max(10, min(80, resolution))
     try:
         if coord_system == 'cartesian':
@@ -206,7 +188,6 @@ def compute_plot(equation: str, coord_system: str, resolution: int,
 
 def analyze(equation: str, coord_system: str, analysis_type: str,
             point: list, x_range: list, y_range: list) -> dict:
-    """Perform mathematical analysis at a point."""
     eq = equation.strip()
     if '=' in eq:
         eq = eq.split('=', 1)[1].strip()
@@ -216,15 +197,14 @@ def analyze(equation: str, coord_system: str, analysis_type: str,
 
     try:
         if analysis_type == 'slope':
-            # Partial derivatives
             f   = safe_eval(eq, {'x': px,   'y': py})
             fx1 = safe_eval(eq, {'x': px+h, 'y': py})
             fx0 = safe_eval(eq, {'x': px-h, 'y': py})
             fy1 = safe_eval(eq, {'x': px,   'y': py+h})
             fy0 = safe_eval(eq, {'x': px,   'y': py-h})
-            dfdx = (fx1 - fx0) / (2 * h) if fx1 and fx0 else None
-            dfdy = (fy1 - fy0) / (2 * h) if fy1 and fy0 else None
-            grad_mag = math.sqrt(dfdx**2 + dfdy**2) if dfdx and dfdy else None
+            dfdx = (fx1 - fx0) / (2*h) if fx1 and fx0 else None
+            dfdy = (fy1 - fy0) / (2*h) if fy1 and fy0 else None
+            grad_mag = math.sqrt(dfdx**2 + dfdy**2) if dfdx is not None and dfdy is not None else None
             return {
                 'type': 'Gradient / Slope',
                 'point': f'({px}, {py})',
@@ -235,8 +215,7 @@ def analyze(equation: str, coord_system: str, analysis_type: str,
             }
 
         elif analysis_type == 'area':
-            # Numerical integration over x at fixed y
-            n = 1000
+            n  = 1000
             xs = np.linspace(x_range[0], x_range[1], n)
             dx = (x_range[1] - x_range[0]) / n
             total = sum(
@@ -251,7 +230,6 @@ def analyze(equation: str, coord_system: str, analysis_type: str,
             }
 
         elif analysis_type == 'divergence':
-            # For vector field F=[Fx,Fy,Fz]: div F = dFx/dx + dFy/dy + dFz/dz
             parts = eq.strip('[]').split(',')
             if len(parts) < 2:
                 return {'error': 'Divergence requires a vector field F=[Fx,Fy,Fz]'}
@@ -260,13 +238,12 @@ def analyze(equation: str, coord_system: str, analysis_type: str,
             fy = lambda x, y: safe_eval(parts[1].strip(), ns(x, y)) or 0
             dFxdx = (fx(px+h, py) - fx(px-h, py)) / (2*h)
             dFydy = (fy(px, py+h) - fy(px, py-h)) / (2*h)
-            div = dFxdx + dFydy
             return {
                 'type': 'Divergence',
                 'point': f'({px}, {py})',
                 'dFx/dx': dFxdx,
                 'dFy/dy': dFydy,
-                'divergence': div,
+                'divergence': dFxdx + dFydy,
             }
 
         elif analysis_type == 'curl':
@@ -278,13 +255,12 @@ def analyze(equation: str, coord_system: str, analysis_type: str,
             fy = lambda x, y: safe_eval(parts[1].strip(), ns(x, y)) or 0
             dFydx = (fy(px+h, py) - fy(px-h, py)) / (2*h)
             dFxdy = (fx(px, py+h) - fx(px, py-h)) / (2*h)
-            curl_z = dFydx - dFxdy
             return {
                 'type': 'Curl (z-component)',
                 'point': f'({px}, {py})',
                 'dFy/dx': dFydx,
                 'dFx/dy': dFxdy,
-                'curl_z': curl_z,
+                'curl_z': dFydx - dFxdy,
             }
 
     except Exception as e:
