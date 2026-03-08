@@ -62,6 +62,8 @@ export function GraphCanvas({ plotData, loading }) {
 
     // Keyboard
     const onKeyDown = e => {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
       keysHeld.current[e.key.toLowerCase()] = true;
       if (e.key.toLowerCase() === 'r') {
         spherical.current = { ...DEFAULT_SPH };
@@ -104,8 +106,8 @@ export function GraphCanvas({ plotData, loading }) {
 
       if (k['w'] || k['arrowup'])    { t.x += fwd.x*spd; t.z += fwd.z*spd; }
       if (k['s'] || k['arrowdown'])  { t.x -= fwd.x*spd; t.z -= fwd.z*spd; }
-      if (k['a'] || k['arrowleft'])  { t.x += rgt.x*spd; t.z += rgt.z*spd; }
-      if (k['d'] || k['arrowright']) { t.x -= rgt.x*spd; t.z -= rgt.z*spd; }
+      if (k['a'] || k['arrowleft'])  { t.x -= rgt.x*spd; t.z -= rgt.z*spd; }
+      if (k['d'] || k['arrowright']) { t.x += rgt.x*spd; t.z += rgt.z*spd; }
       if (k['e']) { t.y += spd; }
       if (k['q']) { t.y -= spd; }
 
