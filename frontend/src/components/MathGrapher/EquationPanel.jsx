@@ -1,28 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const COORD_SYSTEMS = [
-  { id: 'cartesian',   label: 'Cartesian',   hint: 'z = sin(x) * cos(y)' },
-  { id: 'cylindrical', label: 'Cylindrical', hint: 'z = r * sin(theta)' },
-  { id: 'spherical',   label: 'Spherical',   hint: 'rho = 2 * sin(phi)' },
-  { id: 'parametric',  label: 'Parametric',  hint: 'x=cos(t), y=sin(t), z=t' },
+const COORD_SYSTEMS_3D = [
+  { id: 'cartesian',   label: 'Cartesian',    hint: 'z = sin(x) * cos(y)' },
+  { id: 'cylindrical', label: 'Cylindrical',  hint: 'z = r * sin(theta)' },
+  { id: 'spherical',   label: 'Spherical',    hint: 'rho = 2 * sin(phi)' },
+  { id: 'parametric',  label: 'Parametric',   hint: 'x=cos(t), y=sin(t), z=t' },
   { id: 'vector',      label: 'Vector Field', hint: 'F = [-y, x, 0]' },
-  { id: 'implicit', label: 'Implicit', hint: 'x**2 + y**2 + z**2 - 1' },
 ];
 
-const EXAMPLES = [
-  { label: 'Paraboloid',   eq: 'z = x**2 + y**2',         coord: 'cartesian' },
-  { label: 'Saddle',       eq: 'z = x**2 - y**2',         coord: 'cartesian' },
-  { label: 'Sine surface', eq: 'z = sin(x) * cos(y)',      coord: 'cartesian' },
-  { label: 'Sphere',       eq: 'rho = 1',                  coord: 'spherical' },
-  { label: 'Cone',         eq: 'z = r',                    coord: 'cylindrical' },
+const COORD_SYSTEMS_2D = [
+  { id: 'cartesian2d',  label: 'Cartesian',   hint: 'y = sin(x)' },
+  { id: 'parametric2d', label: 'Parametric',  hint: 'x=cos(t), y=sin(t)' },
+  { id: 'polar',        label: 'Polar',       hint: 'r = 1 + cos(theta)' },
+];
+
+const EXAMPLES_3D = [
+  { label: 'Paraboloid',   eq: 'z = x**2 + y**2',          coord: 'cartesian' },
+  { label: 'Saddle',       eq: 'z = x**2 - y**2',          coord: 'cartesian' },
+  { label: 'Sine surface', eq: 'z = sin(x) * cos(y)',       coord: 'cartesian' },
+  { label: 'Sphere',       eq: 'x**2 + y**2 + z**2 = 1',   coord: 'cartesian' },
+  { label: 'Cone',         eq: 'z = r',                     coord: 'cylindrical' },
   { label: 'Helix',        eq: 'x=cos(t), y=sin(t), z=t/3', coord: 'parametric' },
-  { label: 'Vortex field', eq: 'F = [-y, x, 0]',          coord: 'vector' },
-  { label: 'Sphere',       eq: 'x**2 + y**2 + z**2 - 1',      coord: 'implicit' },
-  { label: 'Hyperboloid',  eq: 'x**2 + y**2 - z**2 - 1',      coord: 'implicit' },
-  { label: 'Torus',        eq: '(sqrt(x**2+y**2)-2)**2+z**2-1', coord: 'implicit' },
+  { label: 'Vortex field', eq: 'F = [-y, x, 0]',           coord: 'vector' },
+  { label: 'Hyperboloid',  eq: 'x**2 + y**2 - z**2 = 1',   coord: 'cartesian' },
+  { label: 'Torus',        eq: '(sqrt(x**2+y**2)-2)**2+z**2 = 1', coord: 'cartesian' },
 ];
 
-export function EquationPanel({ onPlot, onAnalyze, loading, analysisResult }) {
+const EXAMPLES_2D = [
+  { label: 'Sine',      eq: 'y = sin(x)',            coord: 'cartesian2d' },
+  { label: 'Parabola',  eq: 'y = x**2',              coord: 'cartesian2d' },
+  { label: 'Circle',    eq: 'x**2 + y**2 = 1',       coord: 'cartesian2d' },
+  { label: 'Ellipse',   eq: 'x**2/4 + y**2 = 1',     coord: 'cartesian2d' },
+  { label: 'Rose',      eq: 'r = cos(2*theta)',       coord: 'polar' },
+  { label: 'Spiral',    eq: 'r = theta / (2*pi)',     coord: 'polar' },
+  { label: 'Circle (P)', eq: 'x=cos(t), y=sin(t)',   coord: 'parametric2d' },
+  { label: 'Lissajous', eq: 'x=sin(3*t), y=sin(2*t)', coord: 'parametric2d' },
+];
+
+export function EquationPanel({ onPlot, onAnalyze, loading, analysisResult, mode }) {
+  const is2D = mode === '2d';
+
   const [coord, setCoord]       = useState('cartesian');
   const [equation, setEquation] = useState('z = x**2 + y**2');
   const [resolution, setRes]    = useState(40);
@@ -32,9 +49,22 @@ export function EquationPanel({ onPlot, onAnalyze, loading, analysisResult }) {
   const [analyzePoint, setAnalyzePoint] = useState('0, 0');
   const [showAnalysis, setShowAnalysis] = useState(false);
 
+  // Reset coord and equation when mode changes
+  useEffect(() => {
+    if (is2D) {
+      setCoord('cartesian2d');
+    } else {
+      setCoord('cartesian');
+    }
+  }, [is2D]);
+
+  const COORD_SYSTEMS = is2D ? COORD_SYSTEMS_2D : COORD_SYSTEMS_3D;
+  const EXAMPLES      = is2D ? EXAMPLES_2D      : EXAMPLES_3D;
+
   function handlePlot() {
     onPlot({
-      equation, coord_system: coord,
+      equation,
+      coord_system: coord,
       resolution: parseInt(resolution),
       x_range: JSON.parse(xRange),
       y_range: JSON.parse(yRange),
@@ -100,14 +130,14 @@ export function EquationPanel({ onPlot, onAnalyze, loading, analysisResult }) {
       </div>
 
       {/* Range inputs */}
-      {(coord === 'cartesian' || coord === 'cylindrical') && (
+      {(coord === 'cartesian' || coord === 'cartesian2d' || coord === 'cylindrical') && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <div>
-            <span style={labelStyle}>X RANGE</span>
+            <span style={labelStyle}>{is2D ? 'X RANGE' : 'X RANGE'}</span>
             <input value={xRange} onChange={e => setXRange(e.target.value)} style={inputStyle} />
           </div>
           <div>
-            <span style={labelStyle}>Y RANGE</span>
+            <span style={labelStyle}>{is2D ? 'Y RANGE' : 'Y RANGE'}</span>
             <input value={yRange} onChange={e => setYRange(e.target.value)} style={inputStyle} />
           </div>
         </div>
