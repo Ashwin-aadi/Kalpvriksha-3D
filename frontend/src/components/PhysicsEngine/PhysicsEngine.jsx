@@ -8,7 +8,7 @@ export function PhysicsEngine() {
   const [error, setError]       = useState('');
   const [playing, setPlaying]   = useState(false);
 
-  const API = 'http://localhost:8000';
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   async function handleSolve(params) {
     setLoading(true);
