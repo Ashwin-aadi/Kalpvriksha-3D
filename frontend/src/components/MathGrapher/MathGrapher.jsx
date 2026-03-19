@@ -10,7 +10,7 @@ export function MathGrapher() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [mode, setMode]           = useState('3d'); // '2d' or '3d'
 
-  const API = 'http://localhost:8000';
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   async function handlePlot(params) {
     setLoading(true);
